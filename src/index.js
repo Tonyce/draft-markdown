@@ -29,7 +29,7 @@ import insertText from "./modifiers/insertText";
 import changeCurrentBlockType from "./modifiers/changeCurrentBlockType";
 import createLinkDecorator from "./decorators/link";
 import createImageDecorator from "./decorators/image";
-import { replaceText, getCurrentLine } from "./utils";
+// import { replaceText, getCurrentLine } from "./utils";
 import {
   CODE_BLOCK_REGEX,
   CODE_BLOCK_TYPE,
@@ -57,7 +57,7 @@ const defaultLanguages = {
   swift: "Swift",
 };
 
-const INLINE_STYLE_CHARACTERS = ["*", "_", "`", "~"];
+// const INLINE_STYLE_CHARACTERS = ["*", "_", "`", "~"];
 
 const defaultRenderSelect = ({ options, onChange, selectedValue }) => (
   <select value={selectedValue} onChange={onChange}>
@@ -98,38 +98,31 @@ function checkCharacterForState(config, editorState, character) {
     editorState,
     character
   );
-  if (
-    editorState === newEditorState &&
-    config.features.inline.includes("IMAGE")
-  ) {
-    newEditorState = handleImage(
-      editorState,
-      character,
-      config.entityType.IMAGE
-    );
+  if (editorState === newEditorState && config.features.inline.includes("IMAGE")) {
+    newEditorState = handleImage(editorState, character, config.entityType.IMAGE);
   }
-  if (
-    editorState === newEditorState &&
-    config.features.inline.includes("LINK")
-  ) {
+  if (editorState === newEditorState && config.features.inline.includes("LINK")) {
     newEditorState = handleLink(editorState, character, config.entityType.LINK);
   }
-  if (
-    newEditorState === editorState &&
-    config.features.block.includes("CODE")
-  ) {
-    const contentState = editorState.getCurrentContent();
-    const selection = editorState.getSelection();
-    const key = selection.getStartKey();
-    const currentBlock = contentState.getBlockForKey(key);
-    const text = currentBlock.getText();
-    const type = currentBlock.getType();
-    if (type !== "code-block" && CODE_BLOCK_REGEX.test(text))
-      newEditorState = handleNewCodeBlock(editorState);
-  }
+  // code-block 只需在回车时
+  // if (newEditorState === editorState && config.features.block.includes("CODE")) {
+  //   const contentState = editorState.getCurrentContent();
+  //   const selection = editorState.getSelection();
+  //   const key = selection.getStartKey();
+  //   const currentBlock = contentState.getBlockForKey(key);
+  //   const text = currentBlock.getText();
+  //   const type = currentBlock.getType();
+  //   if (type !== "code-block" && CODE_BLOCK_REGEX.test(text)) {
+  //     newEditorState = handleNewCodeBlock(editorState);
+  //   }
+  // }
   if (editorState === newEditorState) {
+    // newEditorState = handleInlineStyle(
+    //   config.features.inline,
+    //   editorState,
+    //   character
+    // );
     newEditorState = handleInlineStyle(
-      config.features.inline,
       editorState,
       character
     );
@@ -138,6 +131,7 @@ function checkCharacterForState(config, editorState, character) {
 }
 
 function checkReturnForState(config, editorState, ev) {
+  console.log({ config })
   let newEditorState = editorState;
   const contentState = editorState.getCurrentContent();
   const selection = editorState.getSelection();
@@ -285,6 +279,10 @@ const createMarkdownPlugin = (_config = {}) => {
       switch (block.getType()) {
         case CHECKABLE_LIST_ITEM:
           return CHECKABLE_LIST_ITEM;
+        // case 'code-block': {
+        //   const language = block.getData().get('language')
+        //   return language ? `language-${language}` : null;
+        // }
         default:
           break;
       }
@@ -343,7 +341,8 @@ const createMarkdownPlugin = (_config = {}) => {
       }
       return "not-handled";
     },
-    handleReturn(ev, editorState, { setEditorState }) {
+    handleReturn(ev, editorState, { setEditorState }) { // 回车
+      console.log('handleReturn ...')
       if (inLink(editorState)) return "not-handled";
 
       let newEditorState = checkReturnForState(config, editorState, ev);
@@ -382,6 +381,7 @@ const createMarkdownPlugin = (_config = {}) => {
       return "not-handled";
     },
     handleBeforeInput(character, editorState, { setEditorState }) {
+      console.log('handleBeforeInput ...')
       // If we're in a code block - don't transform markdown
       if (inCodeBlock(editorState)) return "not-handled";
 
@@ -413,6 +413,7 @@ const createMarkdownPlugin = (_config = {}) => {
 
       return "not-handled";
     },
+    /*
     handleKeyCommand(command, editorState, { setEditorState }) {
       switch (command) {
         case "backspace": {
@@ -442,6 +443,7 @@ const createMarkdownPlugin = (_config = {}) => {
         }
       }
     },
+    */
   };
 };
 

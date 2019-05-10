@@ -8,19 +8,19 @@ import Draft, {
   ContentState,
   EditorState,
 } from "draft-js";
-import styles from "./styles.css";
-import Prism from "prismjs";
-import "prismjs/components/prism-java";
-import "prismjs/components/prism-scala";
-import "prismjs/components/prism-go";
-import "prismjs/components/prism-sql";
-import "prismjs/components/prism-bash";
-import "prismjs/components/prism-c";
-import "prismjs/components/prism-cpp";
-import "prismjs/components/prism-kotlin";
-import "prismjs/components/prism-perl";
-import "prismjs/components/prism-ruby";
-import "prismjs/components/prism-swift";
+import "./styles.css";
+// import Prism from "prismjs";
+// import "prismjs/components/prism-java";
+// import "prismjs/components/prism-scala";
+// import "prismjs/components/prism-go";
+// import "prismjs/components/prism-sql";
+// import "prismjs/components/prism-bash";
+// import "prismjs/components/prism-c";
+// import "prismjs/components/prism-cpp";
+// import "prismjs/components/prism-kotlin";
+// import "prismjs/components/prism-perl";
+// import "prismjs/components/prism-ruby";
+// import "prismjs/components/prism-swift";
 
 import prismPlugin from './plugins/prism';
 import initialState from "./initial-state";
@@ -31,10 +31,9 @@ const renderLanguageSelect = ({
   selectedValue,
   selectedLabel,
 }) => (
-  <div className={styles.switcherContainer}>
-    <div className={styles.switcher}>
+  <div>
+    <div>
       <select
-        className={styles.switcherSelect}
         value={selectedValue}
         onChange={onChange}
       >
@@ -44,7 +43,7 @@ const renderLanguageSelect = ({
           </option>
         ))}
       </select>
-      <div className={styles.switcherLabel}>
+      <div>
         {selectedLabel} {String.fromCharCode(9662)}
       </div>
     </div>
@@ -95,8 +94,8 @@ export default class DemoEditor extends Component {
         <div>
           <button onClick={this.toMD}>tomd</button>
         </div>
-        <div className={styles.root}>
-          <div className={styles.editor} onClick={this.focus}>
+        <div>
+          <div onClick={this.focus}>
             <Editor
               editorState={editorState}
               onChange={this.onChange}

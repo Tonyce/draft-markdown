@@ -4,7 +4,7 @@ const Image = ({ entityKey, children, contentState }) => {
   const { src, alt, title } = contentState.getEntity(entityKey).getData();
   return (
     <span>
-      {children}
+      {/* {children} */}
       <img src={src} alt={alt} title={title} />
     </span>
   );
